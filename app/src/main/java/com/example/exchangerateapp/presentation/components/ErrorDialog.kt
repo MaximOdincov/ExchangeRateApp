@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import com.example.exchangerateapp.R
 
 @Composable
 fun ErrorDialog(
@@ -19,16 +21,16 @@ fun ErrorDialog(
         icon = {
             Icon(painterResource(icon), null)
         },
-        title = { Text("Error") },
+        title = { Text(stringResource(R.string.error_title)) },
         text = { Text(message) },
         confirmButton = {
             TextButton(onClick = onRetry) {
-                Text("Retry")
+                Text(stringResource(R.string.retry))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

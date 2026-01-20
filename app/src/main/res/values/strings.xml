@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">ExchangeRateApp</string>
+    <string name="toolbar_title">Курсы валют</string>
+    <string name="search_placeholder">Поиск валюты</string>
+    <string name="snackbar_error">Произошла ошибка</string>
+    <string name="no_internet_message">Проверьте подключение к интернету</string>
+    <string name="server_unavailable">Сервер недоступен. Попробуйте позже.</string>
+    <string name="error_title">Ошибка</string>
+    <string name="retry">Повторить</string>
+    <string name="cancel">Отмена</string>
+    <string name="favourites_label">Избранное</string>
+    <string name="label_code">Код:</string>
+    <string name="label_current">Текущий курс:</string>
+    <string name="label_change">Изменение:</string>
+    <string name="label_previous">Предыдущий курс:</string>
+    <string name="close">Закрыть</string>
+    <string name="nothing_found">Ничего не найдено</string>
 </resources>

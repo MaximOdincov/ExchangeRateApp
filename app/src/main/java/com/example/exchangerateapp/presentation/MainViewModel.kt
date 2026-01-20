@@ -43,7 +43,7 @@ class MainViewModel(
 
     private val searchQuery = MutableStateFlow("")
     val query = searchQuery.asStateFlow()
-    private val _isRefreshing = kotlinx.coroutines.flow.MutableStateFlow(false)
+    private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
     fun onSearchQueryChange(query: String){
@@ -128,6 +128,10 @@ class MainViewModel(
         viewModelScope.launch {
             setThemeUseCase(theme)
         }
+    }
+
+    init {
+        refresh()
     }
 }
 

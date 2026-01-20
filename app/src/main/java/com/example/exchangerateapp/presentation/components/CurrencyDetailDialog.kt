@@ -15,7 +15,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.exchangerateapp.R
 import com.example.exchangerateapp.presentation.models.CurrencyUI
 
 @Composable
@@ -35,17 +37,20 @@ fun CurrencyDetailsDialog(
         text = {
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Код: ", style = MaterialTheme.typography.labelLarge)
+                    Text(text = stringResource(R.string.label_code), style = MaterialTheme.typography.labelLarge)
+                    Spacer(modifier = Modifier.padding(4.dp))
                     Text(text = currencyUi.currency.charCode, style = MaterialTheme.typography.bodyLarge)
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Текущий курс: ", style = MaterialTheme.typography.labelLarge)
+                    Text(text = stringResource(R.string.label_current), style = MaterialTheme.typography.labelLarge)
+                    Spacer(modifier = Modifier.padding(4.dp))
                     Text(text = currencyUi.currency.value.toString(), style = MaterialTheme.typography.bodyLarge)
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Изменение: ", style = MaterialTheme.typography.labelLarge)
+                    Text(text = stringResource(R.string.label_change), style = MaterialTheme.typography.labelLarge)
+                    Spacer(modifier = Modifier.padding(4.dp))
                     Text(text = currencyUi.changePercent, style = MaterialTheme.typography.bodyLarge, color = when (currencyUi.changeColor) {
                         com.example.exchangerateapp.presentation.models.ChangeColor.POSITIVE -> androidx.compose.ui.graphics.Color(0xFF2E7D32)
                         com.example.exchangerateapp.presentation.models.ChangeColor.NEGATIVE -> androidx.compose.ui.graphics.Color(0xFFD32F2F)
@@ -54,14 +59,15 @@ fun CurrencyDetailsDialog(
                 }
 
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Предыдущий курс: ", style = MaterialTheme.typography.labelLarge)
+                    Text(text = stringResource(R.string.label_previous), style = MaterialTheme.typography.labelLarge)
+                    Spacer(modifier = Modifier.padding(4.dp))
                     Text(text = currencyUi.currency.previous.toString(), style = MaterialTheme.typography.bodyLarge)
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Закрыть")
+                Text(stringResource(R.string.close))
             }
         }
     )

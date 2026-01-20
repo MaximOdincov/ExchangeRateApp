@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.example.exchangerateapp.R
 import com.example.exchangerateapp.presentation.ErrorType
 import com.example.exchangerateapp.presentation.MainViewModel
@@ -37,6 +38,7 @@ fun MainScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     var errorDialog by remember { mutableStateOf<ErrorType?>(null) }
+    val errorMessage = stringResource(R.string.snackbar_error)
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -47,12 +49,7 @@ fun MainScreen(
                         ErrorType.Server -> {
                             errorDialog = event.type
                         }
-
-                        else -> {
-                                    snackbarHostState.showSnackbar(
-                                        message = "Произошла ошибка"
-                                    )
-                                }
+                        else -> snackbarHostState.showSnackbar(message = errorMessage)
                     }
                 }
             }

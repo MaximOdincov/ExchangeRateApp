@@ -18,11 +18,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.exchangerateapp.R
 import com.example.exchangerateapp.presentation.ErrorType
 import com.example.exchangerateapp.presentation.MainViewModel
 import com.example.exchangerateapp.presentation.State
-import com.example.exchangerateapp.presentation.UiEvent
 import com.example.exchangerateapp.presentation.models.CurrencyUI
 import org.koin.androidx.compose.koinViewModel
 
@@ -33,28 +33,14 @@ fun MainScreen(
     val state by viewModel.state.collectAsState()
     val theme by viewModel.themeFlow.collectAsState()
     val query by viewModel.query.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
     var selectedCurrency by remember { mutableStateOf<CurrencyUI?>(null) }
+    var errorDialog by remember { mutableStateOf<ErrorType?>(null) }
 
     val snackbarHostState = remember { SnackbarHostState() }
-    var errorDialog by remember { mutableStateOf<ErrorType?>(null) }
-    val errorMessage = stringResource(R.string.snackbar_error)
+    val outdatedSnackbarMessage = stringResource(R.string.check_internet_connection)
 
-    LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                is UiEvent.ShowError -> {
-                    when (event.type) {
-                        ErrorType.NoInternet,
-                        ErrorType.Server -> {
-                            errorDialog = event.type
-                        }
-                        else -> snackbarHostState.showSnackbar(message = errorMessage)
-                    }
-                }
-            }
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -66,27 +52,37 @@ fun MainScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
 
-        when (state) {
+        when (val currentState = state) {
             State.Loading -> LoadingContent()
 
             is State.Data -> {
-                val data = state as State.Data
+                if (!currentState.isDataNew) {
+                    LaunchedEffect(currentState.date) {
+                        snackbarHostState.showSnackbar(
+                            message = outdatedSnackbarMessage
+                        )
+                    }
+                }
 
                 Column(
                     modifier = Modifier
                         .padding(padding)
                         .fillMaxSize()
                 ) {
-                    SearchField(
-                        query = query,
-                        onQueryChange = viewModel::onSearchQueryChange
+                    LastUpdateBanner(
+                        date = currentState.date,
+                        isDataNew = currentState.isDataNew
                     )
 
-                    val isRefreshing by viewModel.isRefreshing.collectAsState()
+                    SearchField(
+                        query = query,
+                        onQueryChange = viewModel::onSearchQueryChange,
+                        onTrailingButtonClick = viewModel::clearQuery
+                    )
 
                     CurrencyList(
-                        favourites = data.favouriteCurrencies,
-                        currencies = data.currencies,
+                        favourites = currentState.favouriteCurrencies,
+                        currencies = currentState.currencies,
                         onFavouriteClick = viewModel::onFavouriteClick,
                         onRefresh = viewModel::refresh,
                         onItemClick = { selectedCurrency = it },
@@ -94,49 +90,55 @@ fun MainScreen(
                     )
                 }
             }
+
+            is State.Error -> {
+                if (errorDialog == null) {
+                    errorDialog = currentState.type
+                }
+            }
         }
     }
 
     errorDialog?.let { error ->
         when (error) {
-            ErrorType.NoInternet -> {
+            ErrorType.Empty -> {
                 ErrorDialog(
                     icon = R.drawable.no_internet_icon,
-                    message = "Проверьте подключение к интернету",
+                    message = stringResource(R.string.no_data),
                     onRetry = {
-                        errorDialog = null
                         viewModel.refresh()
-                    },
-                    onDismiss = {
                         errorDialog = null
                     }
                 )
             }
 
-            ErrorType.Server -> {
+            else -> {
                 ErrorDialog(
                     icon = R.drawable.server_error_icon,
-                    message = "Сервер недоступен. Попробуйте позже.",
+                    message = stringResource(R.string.service_unavailable),
                     onRetry = {
-                        errorDialog = null
                         viewModel.refresh()
-                    },
-                    onDismiss = {
                         errorDialog = null
                     }
                 )
             }
-            else -> Unit
         }
     }
 
     selectedCurrency?.let { currency ->
-        CurrencyDetailsDialog(currencyUi = currency, onDismiss = { selectedCurrency = null })
+        CurrencyDetailsDialog(
+            currencyUi = currency,
+            onDismiss = { selectedCurrency = null }
+        )
     }
 }
+
 @Composable
-private fun LoadingContent(){
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+private fun LoadingContent() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         CircularProgressIndicator()
     }
 }

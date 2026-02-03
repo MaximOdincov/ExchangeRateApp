@@ -13,11 +13,10 @@ import com.example.exchangerateapp.R
 fun ErrorDialog(
     icon: Int,
     message: String,
-    onRetry: () -> Unit,
-    onDismiss: () -> Unit
+    onRetry: () -> Unit
 ) {
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {},
         icon = {
             Icon(painterResource(icon), null)
         },
@@ -26,11 +25,6 @@ fun ErrorDialog(
         confirmButton = {
             TextButton(onClick = onRetry) {
                 Text(stringResource(R.string.retry))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
             }
         }
     )

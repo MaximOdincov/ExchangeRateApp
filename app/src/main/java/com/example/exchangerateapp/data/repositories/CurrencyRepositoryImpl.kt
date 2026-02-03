@@ -16,7 +16,7 @@ class CurrencyRepositoryImpl(
     private val dao: CurrencyDao,
     private val api: ApiService
 ): CurrencyRepository {
-    override suspend fun getCurrentData(): Result<DayResult?> {
+    override suspend fun getLocalData(): Result<DayResult?> {
         return withContext(Dispatchers.IO) {
             runCatching {
                 val currencies = dao.getCurrencies()
@@ -26,21 +26,23 @@ class CurrencyRepositoryImpl(
         }
     }
 
-    override suspend fun updateCurrentData(): Result<Unit> =
+    override suspend fun getRemoteData(): Result<DayResult> =
         withContext(Dispatchers.IO){
             runCatching {
-                val remote = api.getDailyRates().toDomain()
-                val localDate = dao.getDayInfo()?.date
-
-                if(isNewDay(remote.date, localDate)){
-                    dao.clearCurrencies()
-                    dao.insertCurrencies(remote.currencies.toDb())
-                    dao.insertDayInfo(remote.toDb())
+                api.getDailyRates().toDomain()
                 }
+            }
+
+    override suspend fun saveData(data: DayResult): Result<Unit> =
+        withContext(Dispatchers.IO){
+            runCatching {
+                dao.clearCurrencies()
+                dao.insertCurrencies(data.currencies.toDb())
+                dao.insertDayInfo(data.toDb())
             }
         }
 
-    override fun observeCurrentData(): Flow<DayResult> =
+    override fun observeLocalData(): Flow<DayResult> =
         combine(
             dao.observeCurrencies(),
             dao.observeDayInfo()
@@ -50,10 +52,4 @@ class CurrencyRepositoryImpl(
                 currencies = currenciesDb.map { it.toDomain() }
             )
         }
-
-
-    private fun isNewDay(
-        remote: Long,
-        local: Long?
-    ): Boolean = local == null || remote > local
 }

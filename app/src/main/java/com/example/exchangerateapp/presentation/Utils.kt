@@ -4,8 +4,10 @@ import android.database.sqlite.SQLiteException
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.exchangerateapp.domain.entities.Currency
+import com.example.exchangerateapp.domain.exeptions.EmptyException
 import com.example.exchangerateapp.presentation.models.ChangeColor
 import com.example.exchangerateapp.presentation.models.CurrencyUI
+import com.google.gson.JsonParseException
 import kotlinx.serialization.SerializationException
 import java.io.IOException
 import java.net.ConnectException
@@ -18,18 +20,16 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-fun Throwable.toErrorType(): ErrorType =
-    when (this) {
-        is UnknownHostException, is SocketTimeoutException, is IOException, is ConnectException -> ErrorType.NoInternet
-
-        is HttpException -> ErrorType.Server
-
-        is SerializationException -> ErrorType.Parsing
-
-        is SQLiteException -> ErrorType.Database
-
-        else -> ErrorType.Unknown
-    }
+fun Throwable.toErrorType(): ErrorType = when (this) {
+    is UnknownHostException,
+    is SocketTimeoutException -> ErrorType.NoInternet
+    is HttpException -> ErrorType.Server
+    is JsonParseException,
+    is SerializationException -> ErrorType.Parsing
+    is SQLiteException -> ErrorType.Database
+    is EmptyException -> ErrorType.Empty
+    else -> ErrorType.Unknown
+}
 
 fun Long.toDateString(): String {
     val instant = Instant.ofEpochMilli(this)

@@ -4,7 +4,7 @@
     <string name="search_placeholder">Поиск валюты</string>
     <string name="snackbar_error">Произошла ошибка</string>
     <string name="no_internet_message">Проверьте подключение к интернету</string>
-    <string name="server_unavailable">Сервер недоступен. Попробуйте позже.</string>
+    <string name="service_unavailable">В данное время сервис недоступен. Попробуйте позже.</string>
     <string name="error_title">Ошибка</string>
     <string name="retry">Повторить</string>
     <string name="cancel">Отмена</string>
@@ -15,4 +15,11 @@
     <string name="label_previous">Предыдущий курс:</string>
     <string name="close">Закрыть</string>
     <string name="nothing_found">Ничего не найдено</string>
+    <string name="check_internet_connection">Проверьте подключение к интернету</string>
+    <string name="server_error">Ошибка данных сервера</string>
+    <string name="db_error">Ошибка базы данных</string>
+    <string name="no_data">Нет данных для отображения, проверьте интернет соединение</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="can_not_refresh_data">Не удалось обновить данные, проверьте интернет соединение</string>
+    <string name="data_may_be_outdated">Данные могут быть неактуальны. Последнее обновление: %1$s</string>
 </resources>

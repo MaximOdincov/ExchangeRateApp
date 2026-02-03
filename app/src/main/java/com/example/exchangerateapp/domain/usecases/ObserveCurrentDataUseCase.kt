@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 class ObserveCurrentDataUseCase(
     private val repository: CurrencyRepository){
-    operator fun invoke(): Flow<DayResult> = repository.observeCurrentData()
+    operator fun invoke(): Flow<DayResult> = repository.observeLocalData()
 }

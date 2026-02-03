@@ -8,5 +8,9 @@ sealed class State {
         val favouriteCurrencies: List<CurrencyUI>,
         val currencies:List<CurrencyUI>,
         val date: String,
+        val isDataNew: Boolean
     ): State()
+    data class Error(
+        val type: ErrorType
+    ) : State()
 }

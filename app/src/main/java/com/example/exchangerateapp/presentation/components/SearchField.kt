@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +17,8 @@ import com.example.exchangerateapp.R
 @Composable
 fun SearchField(
     query: String,
-    onQueryChange: (String) -> Unit
+    onQueryChange: (String) -> Unit,
+    onTrailingButtonClick: () -> Unit
 ) {
     OutlinedTextField(
         value = query,
@@ -29,6 +31,16 @@ fun SearchField(
                 painter = painterResource(R.drawable.search_icon),
                 contentDescription = null
             )
+        },
+        trailingIcon = {
+            if(query.isNotEmpty()){
+                IconButton(onClick = {onTrailingButtonClick()}) {
+                    Icon(
+                        painter = painterResource(R.drawable.cancel_icon),
+                        contentDescription = ""
+                    )
+                }
+            }
         },
         placeholder = {
             Text(stringResource(R.string.search_placeholder))

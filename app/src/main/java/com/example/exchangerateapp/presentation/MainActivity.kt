@@ -1,5 +1,4 @@
 package com.example.exchangerateapp.presentation
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,7 +16,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             val vm: MainViewModel = koinViewModel()
             val theme by vm.themeFlow.collectAsState()
-
             ExchangeRateAppTheme(darkTheme = when (theme) {
                 com.example.exchangerateapp.domain.entities.AppTheme.DARK -> true
                 com.example.exchangerateapp.domain.entities.AppTheme.LIGHT -> false

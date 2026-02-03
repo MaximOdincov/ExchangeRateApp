@@ -42,43 +42,54 @@ fun CurrencyList(
         state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = onRefresh
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-
-            if (favourites.isNotEmpty()) {
-                item {
-                    Text(
-                        stringResource(R.string.favourites_label),
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.titleMedium
+        if (favourites.isEmpty() && currencies.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        modifier = Modifier.size(25.dp),
+                        painter = painterResource(R.drawable.nothing_icon),
+                        contentDescription = null
                     )
-                }
-
-                items(favourites) {
-                    CurrencyCard(it, onFavouriteClick, onItemClick)
-                }
-
-                item {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        thickness = DividerDefaults.Thickness,
-                        color = DividerDefaults.color
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        stringResource(R.string.nothing_found),
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }
+        }
+        else{
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
 
-            if (favourites.isEmpty() && currencies.isEmpty()) {
-                item {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                            Icon(modifier = Modifier.size(25.dp), painter = painterResource(R.drawable.nothing_icon), contentDescription = null)
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(stringResource(R.string.nothing_found), style = MaterialTheme.typography.bodyLarge)
-                        }
+                if (favourites.isNotEmpty()) {
+                    item {
+                        Text(
+                            stringResource(R.string.favourites_label),
+                            modifier = Modifier.padding(16.dp),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+
+                    items(favourites) {
+                        CurrencyCard(it, onFavouriteClick, onItemClick)
+                    }
+
+                    item {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            thickness = DividerDefaults.Thickness,
+                            color = DividerDefaults.color
+                        )
                     }
                 }
-            } else {
                 val grouped = currencies.groupBy { it.currency.name.first() }
 
                 grouped.forEach { (letter, list) ->
@@ -92,7 +103,6 @@ fun CurrencyList(
                             Text(letter.toString())
                         }
                     }
-
                     items(list) {
                         CurrencyCard(it, onFavouriteClick, onItemClick)
                     }
